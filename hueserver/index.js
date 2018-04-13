@@ -13,7 +13,7 @@ let hueManager = new HueManager(hue, user)
 let isOnline = false;
 let interval = 0; 
 console.info("Initializing localstorage...");
-await storage.init();
+// await storage.init();
 console.info("Init Complete");
 
 let checkRobloxUserOnline = () => {
@@ -69,13 +69,15 @@ app.get('/random/:groupId/:lum/:sat', (req, res, next) => {
 app.get('/brightness/:groupId/:lum', (req, res, next) => {
     hueManager.setCurrentGroupId(req.params.groupId);
     hueManager.setCurrentBrightness(req.params.lum);
-    hueManger.updateBrightness();
+    hueManager.updateBrightness();
+    res.json(hueManager);
 });
 
 app.get('/saturation/:groupId/:sat', (req, res, next) => {
     hueManager.setCurrentGroupId(req.params.groupId);
     hueManager.setCurrentSaturation(req.params.sat);
     hueManager.updateSaturation();
+    res.json(hueManager);
 });
 
 app.get('/groups', (req, res, next) => {

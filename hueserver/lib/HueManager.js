@@ -153,12 +153,13 @@ module.exports = class HueManager {
     }
 
     updateBrightness(){
-        let lights = this.getGroup(this.groupId).lights;
-        
+        let state = this.hue.lightState.create().on().brightness(this.lum);
+        this.api.setGroupLightState(this.groupId, state);
     }
 
     updateSaturation(){
-
+        let state = this.hue.lightState.create().on().saturation(this.sat);
+        this.api.setGroupLightState(this.groupId, state);
     }
 
     flashAllLights(count){
