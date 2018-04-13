@@ -1,9 +1,13 @@
+
+
 module.exports = class HueManager {
 
     constructor(hue, user) {
         this.hue = hue
         this.user = user || null
         this.api = null;
+        this.lum = 100;
+        this.sat = 100;
         return this;
     }
 
@@ -112,7 +116,7 @@ module.exports = class HueManager {
 
     getRandomColor(){
         let hue = Math.floor(Math.random() * (360 - 0))
-        return [hue, 100, 100]
+        return [hue, this.sat, this.lum]
     }
 
     getRandomGroupPalette(){
@@ -123,6 +127,14 @@ module.exports = class HueManager {
 
         return colors;
         //return this.shufflePalette(colors)
+    }
+
+    setCurrentBrightness(lum){
+        this.lum = lum;
+    }
+
+    setCurrentSaturation(sat){
+        this.sat = sat;
     }
 
     applyRandomGroupPalette(){
@@ -138,6 +150,15 @@ module.exports = class HueManager {
             this.api.setLightState(light, state);
             index = (index === lastIndex)? 0: index + 1;
         });
+    }
+
+    updateBrightness(){
+        let lights = this.getGroup(this.groupId).lights;
+        
+    }
+
+    updateSaturation(){
+
     }
 
     flashAllLights(count){

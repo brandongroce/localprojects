@@ -4,6 +4,7 @@ const   request = require('request'),
         HueManager = require('./lib/HueManager'),
         palette = require('./data/palette'),
         convert = require('color-convert'),
+        storage = require('node-persist');
         app     = express();
 
 let user = 'nBlX8lGORmnex1fPWK60LpyESwU8G7fWgVYJISan'
@@ -11,6 +12,9 @@ let groupId = 4;
 let hueManager = new HueManager(hue, user)
 let isOnline = false;
 let interval = 0; 
+console.info("Initializing localstorage...");
+await storage.init();
+console.info("Init Complete");
 
 let checkRobloxUserOnline = () => {
     request.get('http://api.roblox.com/users/462935774/friends', (err, response) => {
@@ -52,6 +56,27 @@ app.get('/random/:groupId', (req, res, next) => {
     hueManager.applyRandomGroupPalette();
     res.json(hueManager);
 })
+
+app.get('/random/:groupId/:lum/:sat', (req, res, next) => {
+    hueManager.setCurrentGroupId(req.params.groupId);
+    hueManager.setCurrentBrightness(req.params.lum);
+    hueManager.setCurrentSaturation(req.params.sat);
+    
+    hueManager.applyRandomGroupPalette();
+    res.json(hueManager);
+})
+
+app.get('/brightness/:groupId/:lum', (req, res, next) => {
+    hueManager.setCurrentGroupId(req.params.groupId);
+    hueManager.setCurrentBrightness(req.params.lum);
+    hueManger.updateBrightness();
+});
+
+app.get('/saturation/:groupId/:sat', (req, res, next) => {
+    hueManager.setCurrentGroupId(req.params.groupId);
+    hueManager.setCurrentSaturation(req.params.sat);
+    hueManager.updateSaturation();
+});
 
 app.get('/groups', (req, res, next) => {
     let groups = hueManager.getGroups();
